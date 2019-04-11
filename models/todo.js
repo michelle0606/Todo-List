@@ -8,4 +8,4 @@ const todoSchema = new Schema({
   }
 });
 
-module.exports = mongoose.model("Todo", todoSchema);
+module.exports = mongoose.model("Todo", todoSchema); //創造一個Model: mongoose.model(modelName, schema)

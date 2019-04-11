@@ -2,9 +2,11 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const exphbs = require("express-handlebars");
+const bodyParser = require("body-parser");
 
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
+app.use(bodyParser.urlencoded({ extended: true }));
 
 mongoose.connect("mongodb://127.0.0.1/todo", { useNewUrlParser: true });
 
@@ -37,19 +39,29 @@ app.get("/todos", (req, res) => {
   res.send("列出所有 Todo");
 });
 
-// 新增一筆 Todo 頁面
+// 新增一筆 List 頁面
 app.get("/todos/new", (req, res) => {
-  res.send("新增 Todo 頁面");
+  res.render("new");
 });
 
 // 顯示一筆 Todo 的詳細內容
 app.get("/todos/:id", (req, res) => {
-  res.send("顯示 Todo 的詳細內容");
+  Todo.findById(req.params.id, (err, todo) => {
+    if (err) return console.error(err);
+    return res.render("detail", { todo: todo });
+  });
 });
 
 // 新增一筆  Todo
 app.post("/todos", (req, res) => {
-  res.send("建立 Todo");
+  const todo = Todo({
+    name: req.body.name
+  });
+
+  todo.save(err => {
+    if (err) return console.log(err);
+    return res.redirect("/");
+  });
 });
 
 // 修改 Todo 頁面
@@ -68,5 +80,5 @@ app.post("/todos/:id/delete", (req, res) => {
 });
 
 app.listen(3000, () => {
-  console.log("john legend !!!!!!!");
+  console.log("success!!!!!!!");
 });
