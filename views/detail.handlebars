@@ -1,4 +1,6 @@
 <p>{{{todo.name}}}</p>
 <a href="/">Back</a>
 <a href="/todos/{{{todo.id}}}/edit">Edit</a>
-<button type="submit">Delete</button>
+<form action="/todos/{{{todo.id}}}/delete" method="POST" style="display: inline;">
+  <button type="submit">delete</button>
+</form>
