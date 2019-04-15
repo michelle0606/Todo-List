@@ -27,11 +27,21 @@ const Todo = require("./models/todo");
 
 // 設定路由
 // Todo 首頁
+// app.get("/", (req, res) => {
+//   Todo.find((err, todos) => {
+
+//     if (err) return console.error(err);
+//     return res.render("index", { todos: todos });
+//   });
+// });
+
 app.get("/", (req, res) => {
-  Todo.find((err, todos) => {
-    if (err) return console.error(err);
-    return res.render("index", { todos: todos });
-  });
+  Todo.find({})
+    .sort({ name: "asc" })
+    .exec((err, todos) => {
+      if (err) return console.error(err);
+      return res.render("index", { todos: todos });
+    });
 });
 
 // 新增一筆 List 頁面
