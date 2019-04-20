@@ -9,6 +9,12 @@ const todoSchema = new Schema({
   done: {
     type: Boolean,
     default: false
+  },
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: "User", //定義這個屬性是從 User 這個 model 裡取得
+    index: true,
+    required: true
   }
 });
 
