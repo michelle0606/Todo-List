@@ -14,7 +14,7 @@ app.use(methodOverride("_method"));
 // 使用 express session
 app.use(
   session({
-    secret: "90490jq2jdncjrkljfilkcmoiqw3902i0dokl"
+    secret: "90490jq2jdncjrkljfilkcmoiqw3902i0dokl" // secret: 定義一組自己的私鑰（字串)
   })
 );
 // 使用 Passport

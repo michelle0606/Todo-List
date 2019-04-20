@@ -3,7 +3,9 @@ const express = require("express");
 const router = express.Router();
 const Todo = require("../models/todo");
 
-router.get("/", (req, res) => {
+const { authenticated } = require("../config/auth");
+
+router.get("/", authenticated, (req, res) => {
   Todo.find({})
     .sort({ name: "asc" })
     .exec((err, todos) => {
