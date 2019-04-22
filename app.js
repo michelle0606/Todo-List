@@ -22,7 +22,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // 載入 Passport config
-require("./config/passport")(passport);
+require("./config/passport")(passport); //最後面的(passport)被當成參數傳入
+
 // 登入後可以取得使用者的資訊方便我們在 view 裡面直接使用
 app.use((req, res, next) => {
   res.locals.user = req.user;

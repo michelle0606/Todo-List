@@ -7,6 +7,7 @@ const { authenticated } = require("../config/auth");
 
 // // 新增一筆 List 頁面
 router.get("/new", authenticated, (req, res) => {
+  //authenticated 是一個 function，來自auth.js 裡的object
   res.render("new");
 });
 

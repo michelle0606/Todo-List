@@ -34,6 +34,14 @@ router.post("/register", (req, res) => {
         password,
         password2
       });
+    } else if (!user && password !== password2) {
+      console.log("password is not the same!");
+      res.render("register", {
+        name,
+        email,
+        password,
+        password2
+      });
     } else {
       const newUser = new User({
         name,
@@ -52,7 +60,7 @@ router.post("/register", (req, res) => {
 
 // 登出
 router.get("/logout", (req, res) => {
-  req.logout();
+  req.logout(); // logout() will remove the req.user property and clear the login session (passportAPI)
   res.redirect("/users/login");
 });
 
