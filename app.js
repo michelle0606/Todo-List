@@ -14,7 +14,9 @@ app.use(methodOverride("_method"));
 // 使用 express session
 app.use(
   session({
-    secret: "90490jq2jdncjrkljfilkcmoiqw3902i0dokl" // secret: 定義一組自己的私鑰（字串)
+    secret: "90490jq2jdncjrkljfilkcmoiqw3902i0dokl",
+    resave: "false",
+    saveUninitialized: "false" // secret: 定義一組自己的私鑰（字串)
   })
 );
 // 使用 Passport
@@ -31,7 +33,10 @@ app.use((req, res, next) => {
   next();
 });
 
-mongoose.connect("mongodb://127.0.0.1/todo", { useNewUrlParser: true });
+mongoose.connect("mongodb://127.0.0.1/todo", {
+  useNewUrlParser: true,
+  useCreateIndex: true
+});
 
 const db = mongoose.connection;
 
