@@ -6,7 +6,6 @@ const bodyParser = require("body-parser");
 const methodOverride = require("method-override");
 const session = require("express-session");
 const passport = require("passport");
-const bcrypt = require("bcryptjs");
 
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");

@@ -1,33 +1,33 @@
 const LocalStrategy = require("passport-local").Strategy;
 const mongoose = require("mongoose");
-// 載入 User model
+const bcrypt = require("bcryptjs");
 const User = require("../models/user-model");
+
 module.exports = passport => {
-  //這邊是一個匿名function，從app.js傳入passport這個middleware為參數。
   passport.use(
     new LocalStrategy({ usernameField: "email" }, (email, password, done) => {
-      console.log(req.user);
-      //更改預設的usernameField為email
       User.findOne({
         email: email
       }).then(user => {
         if (!user) {
-          //使用者未註冊email
-          return done(null, false, {
-            //(<error|null>, <user|false>, {message: 'incorrect reason'})
-            message: "That email is not registered"
-          });
+          return done(null, false, { message: "That email is not registered" });
         }
-        if (user.password != password) {
-          //使用者密碼輸入錯誤
-          return done(null, false, {
-            message: "Incorrect email or password"
-          });
-        }
-        return done(null, user); //成功登入
+        console.log("here");
+        //用 bcrypt 來比較「使用者輸入的密碼」跟在使用者資料庫的密碼是否是同一組字串
+        bcrypt.compare(password, user.password, (err, isMatch) => {
+          if (err) throw err;
+          if (isMatch) {
+            return done(null, user);
+          } else {
+            return done(null, false, {
+              message: "Email and Password incorrect"
+            });
+          }
+        });
       });
     })
   );
+
   passport.serializeUser((user, done) => {
     done(null, user.id);
   });
