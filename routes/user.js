@@ -12,8 +12,8 @@ router.get("/login", (req, res) => {
 // 登入檢查
 router.post("/login", (req, res, next) => {
   passport.authenticate("local", {
-    successRedirect: "/", // 登入成功會回到根目錄
-    failureRedirect: "/users/login" // 失敗會留在原本頁面
+    successRedirect: "/",
+    failureRedirect: "/users/login"
   })(req, res, next);
 });
 
@@ -24,47 +24,56 @@ router.get("/register", (req, res) => {
 
 // 註冊檢查
 router.post("/register", (req, res) => {
-  const { name, email, password, password2 } = req.body; //這個叫解構賦值:Destructuring，可以將陣列或物件中的資料取出成為獨立變數。
-  User.findOne({ email: email }).then(user => {
-    //Model.findOne()中第一個參數是type,第二個是要比對的值
-    if (user) {
-      console.log("User already exists");
-      res.render("register", {
-        name,
-        email,
-        password,
-        password2
-      });
-    } else if (!user && password !== password2) {
-      console.log("password is not the same!");
-      res.render("register", {
-        name,
-        email,
-        password,
-        password2
-      });
-    } else {
-      const newUser = new User({
-        name,
-        email,
-        password
-      });
-
-      // 密碼雜湊
-      bcrypt.genSalt(10, (err, salt) => {
-        bcrypt.hash(newUser.password, salt, (err, hash) => {
-          if (err) throw err;
-          newUser.password = hash;
-          newUser
-            .save()
-            .then(user => {
-              res.redirect("/");
-            })
-            .catch(err => console.log(err));
+  const { name, email, password, password2 } = req.body;
+  let errors = [];
+  if (!name || !email || !password || !password2) {
+    errors.push({ message: "所有欄位都是必填" });
+  }
+  if (password !== password2) {
+    errors.push({ message: "密碼輸入錯誤" });
+  }
+  if (errors.length > 0) {
+    res.render("register", {
+      errors,
+      name,
+      email,
+      password,
+      password2
+    });
+  } else {
+    User.findOne({ email: email }).then(user => {
+      if (user) {
+        errors.push({ message: "這個 Email 已經註冊過了" });
+        res.render("register", {
+          errors,
+          name,
+          email,
+          password,
+          password2
         });
-      });
-    }
-  });
+      } else {
+        const newUser = new User({
+          name,
+          email,
+          password
+        });
+
+        // 密碼雜湊
+        bcrypt.genSalt(10, (err, salt) => {
+          bcrypt.hash(newUser.password, salt, (err, hash) => {
+            if (err) throw err;
+            newUser.password = hash;
+            newUser
+              .save()
+              .then(user => {
+                res.redirect("/");
+              })
+              .catch(err => console.log(err));
+          });
+        });
+      }
+    });
+  }
 });
 
 // 登出
